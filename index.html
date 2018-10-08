@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Halloween Candy</title>
+  <link rel="stylesheet" href="css/skeleton.css" />
+  <link rel="stylesheet" href="css/normalize.css" />
+  <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="shortcut icon" href="#" />
+</head>
+
+<body>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script type="text/javascript" src="js/draw.js"></script>
+  <div class="container">
+    <div class="row centered">
+      <div class="six columns offset-by-three alpha">
+        <h1>The Ultimate Halloween Candy Ranking</h1>
+      </div>
+    </div>
+    <div class="six columns offset-by-three alpha">
+      <p class="desc centered">These treats will make you the most popular house in the neighborhood.</p>
+    </div>
+    <div class="six columns offset-by-three alpha">
+      <h3 class="centered">Filter By</h3>
+    </div>
+    <div class="six columns offset-by-three alpha">
+
+      <div class="row centered">
+        <form>
+          <input type="radio" name="filter" id="all"> All
+          <input type="radio" name="filter" id="chocolate"> Chocolate
+          <input type="radio" name="filter" id="fruity"> Fruity
+          <input type="radio" name="filter" id="caramel"> Caramel
+          <input type="radio" name="filter" id="peanutalmondy"> Peanutalmondy
+          <input type="radio" name="filter" id="nougat"> Nougat
+          <input type="radio" name="filter" id="crispedricewafer"> Crispedricewafer
+        </form>
+      </div>
+      </div>
+      <div class="six columns offset-by-three alpha">
+        <h3 class="centered">Sort By</h3>
+      </div>
+      <div class="six columns offset-by-three alpha">
+
+        <div class="row centered">
+          <div class="button" data-val="1">Rank</div>
+          <div class="button current" data-val="2">Price</div>
+          <div class="button" data-val="3">Sugar Content</div>
+        </div>
+        </div>
+  </div>
+
+  <div class="row">
+      <div class="ten columns offset-by-one alpha" id="chart">
+
+      </div>
+  </div>
+
+</body>
+
+</html>
