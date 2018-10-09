@@ -7,14 +7,18 @@ $(document).ready(function () {
 
 });
 
-var order = "Price"
+var newdata = []
+
+var order = "Rank"
 
 // Loads the CSV file
 function loadData() {
    d3.csv("data/candy-data.csv",function(d){
      data = d;
      Filter();
-     order = Order();
+     //order = "Price";
+     Order(); //update order
+     console.log(order)
      Sort(order);
      // console.log(sort)
      //Order(sort);
@@ -23,7 +27,7 @@ function loadData() {
 }
 
 function Filter() {
-  var newdata = [];
+  //var newdata = [];
   $('input[type=radio]').each(function(){
     $(this).change(function(){
       //data = data;
@@ -36,28 +40,15 @@ function Filter() {
       newdata = item;
       console.log(newdata);
       $("#chart").empty();
-      visualizeChart(newdata);
+      //visualizeChart(newdata);
+
     };
    })
   })
 }
 
-function Order(){
-  $('.button').each(function(){
-    $(this).on('click', function(){
-      $('.button').removeClass("current");
-      $(this).addClass('current');
-      order = $(this).html();
-      //Sort(sort);
-      // console.log("sorted");
-
-    })
-  }
-  )
-  return order
-}
-
 function Sort(order){
+
 
   console.log(order);
 
@@ -69,19 +60,36 @@ function Sort(order){
     case "Sugar Content":
       data.sort((a, b) => b.sugarpercent - a.sugarpercent); break;
   }
+  console.log(order);
   //x.domain(data.map(d => d.name));
-  //chart.update();
   return order;
 }
+
+function Order(){
+  $('.button').each(function(){
+    $(this).on('click', function(){
+      $('.button').removeClass("current");
+      $(this).addClass('current');
+      order = $(this).html();
+      //return order
+      //Sort(order);
+    })
+
+    }
+  )
+return order
+}
+
+
 
 
 function visualizeChart(item) {
 
   //console.log(item);
 
-  var margin = { top: 0, right: 100, bottom: 20, left: 100 };
-  var width = 1000 - margin.left - margin.right;
-  var height = 400 - margin.top - margin.bottom;
+  const margin = { top: 0, right: 100, bottom: 20, left: 100 };
+  const width = 1000 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
 
   var x = d3.scaleBand()
     .domain(item.map(function(d) {
@@ -122,7 +130,7 @@ function visualizeChart(item) {
 
 
   var g = svg.selectAll(".bar")
-   .data(item)
+   .data(item).order()
    .enter()
    .append("g")
 
@@ -140,28 +148,36 @@ function visualizeChart(item) {
      return height - y(d.winpercent);
    });
 
+   g.attr("class","centered")
+
    g.append("text")
    .attr("dy", ".35em")
-   .text("1")
-   .attr("fill","black");
+   .attr("x", function(d) {
+     return x(d["competitorname"])+3;
+   })
+   .attr("y",function(d) {
+     return y(d.winpercent)+10;
+   })
+   .text(function(d,i) {
+     return i+1;
+   })
+   .attr("fill","white");
 
-//test
-//test2
-//    svg.node().update = () => {
-//     const t = svg.transition()
-//         .duration(750);
-//
-//     bar.data(data, d => d.name)
-//         .order()
-//       .transition(t)
-//         .delay((d, i) => i * 20)
-//         .attr("x", d => x(d.name));
-//
-//     xaxis.transition(t)
-//         .call(xAxis)
-//       .selectAll(".tick")
-//         .delay((d, i) => i * 20);
-//
-//
-// }
+   svg.node().update = () => {
+     const t = svg.transition()
+         .duration(750);
+
+     bar.data(data, d => d.competitorname)
+         .order()
+       .transition(t)
+         .delay((d, i) => i * 20)
+         .attr("x", d => x(d.competitorname));
+
+     gx.transition(t)
+         .call(xaxis)
+       .selectAll(".tick")
+         .delay((d, i) => i * 20);
+   };
+
+   return svg.node();
 }
