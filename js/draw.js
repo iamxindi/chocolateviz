@@ -1,6 +1,7 @@
 
 $(document).ready(function () {
     loadData();
+    updateButton();
 
 });
 var sort
@@ -10,9 +11,25 @@ function loadData() {
    d3.csv("data/candy-data.csv",function(d){
      data = d;
      updateData();
-     Order(sort);
+     getSortValue();
+     //Order(sort);
 
    })
+}
+
+function updateButton(){
+  $('.button').each(function(){
+    $(this).on('click', function(){
+      $('.button').removeClass("current");
+      $(this).addClass('current');
+    })
+  }
+  )
+}
+
+function getSortValue(){
+  var sort = $(.current).val();
+  console.log(sort)
 }
 
 
@@ -34,33 +51,30 @@ function updateData() {
     };
    })
   })
+}
   //visualizeChart(newdata);
   //console.log(newdata);
 
-  // d3.selectAll(".button").on("click", function () {
-  //     sort= d3.select(this).attr("data-val");
-  //   })
-
-
-//console.log(document.getElementsByClassName("current").innerHTML);
 
 
 
 
-function Order(sort){
 
-  switch (order) {
-    case "by-rank":
-      data.sort((a, b) => a.winpercent - b.winpercent); break;
-    case "by-price":
-      data.sort((a, b) => a.pricepercent - b.pricepercent); break;
-    case "by-sugar":
-      data.sort((a, b) => a.sugarpercent - b.sugarpercent); break;
-  }
-  x.domain(data.map(d => d.name));
-  chart.update();
-  return order;
-}
+
+// function Order(sort){
+//
+//   switch (order) {
+//     case "by-rank":
+//       data.sort((a, b) => a.winpercent - b.winpercent); break;
+//     case "by-price":
+//       data.sort((a, b) => a.pricepercent - b.pricepercent); break;
+//     case "by-sugar":
+//       data.sort((a, b) => a.sugarpercent - b.sugarpercent); break;
+//   }
+//   x.domain(data.map(d => d.name));
+//   chart.update();
+//   return order;
+// }
 
 
 function visualizeChart(item) {
