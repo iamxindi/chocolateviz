@@ -1,39 +1,28 @@
 
 $(document).ready(function () {
     loadData();
-    updateButton();
+
+
+    //getSortValue();
 
 });
-var sort
+
+var order = "Rank"
 
 // Loads the CSV file
 function loadData() {
    d3.csv("data/candy-data.csv",function(d){
      data = d;
-     updateData();
-     getSortValue();
+     Filter();
+     order = Order();
+     Sort(order);
+     // console.log(sort)
      //Order(sort);
 
    })
 }
 
-function updateButton(){
-  $('.button').each(function(){
-    $(this).on('click', function(){
-      $('.button').removeClass("current");
-      $(this).addClass('current');
-    })
-  }
-  )
-}
-
-function getSortValue(){
-  var sort = $(.current).val();
-  console.log(sort)
-}
-
-
-function updateData() {
+function Filter() {
   var newdata = [];
   $('input[type=radio]').each(function(){
     $(this).change(function(){
@@ -52,29 +41,38 @@ function updateData() {
    })
   })
 }
-  //visualizeChart(newdata);
-  //console.log(newdata);
 
+function Order(){
+  $('.button').each(function(){
+    $(this).on('click', function(){
+      $('.button').removeClass("current");
+      $(this).addClass('current');
+      order = $(this).html();
+      //Sort(sort);
+      // console.log("sorted");
 
+    })
+  }
+  )
+  return order
+}
 
+function Sort(order){
 
+  console.log(order);
 
-
-
-// function Order(sort){
-//
-//   switch (order) {
-//     case "by-rank":
-//       data.sort((a, b) => a.winpercent - b.winpercent); break;
-//     case "by-price":
-//       data.sort((a, b) => a.pricepercent - b.pricepercent); break;
-//     case "by-sugar":
-//       data.sort((a, b) => a.sugarpercent - b.sugarpercent); break;
-//   }
-//   x.domain(data.map(d => d.name));
-//   chart.update();
-//   return order;
-// }
+  switch (order) {
+    case "Rank":
+      data.sort((a, b) => b.winpercent - a.winpercent); break;
+    case "Price":
+      data.sort((a, b) => b.pricepercent - a.pricepercent); break;
+    case "Sugar Content":
+      data.sort((a, b) => b.sugarpercent - a.sugarpercent); break;
+  }
+  //x.domain(data.map(d => d.name));
+  //chart.update();
+  return order;
+}
 
 
 function visualizeChart(item) {
@@ -119,9 +117,6 @@ function visualizeChart(item) {
    yaxis = svg.append("g")
      .call(d3.axisLeft(y))
 
-  xaxis = svg.append("g")
-       .attr("transform", "translate(0," + height + ")")
-       .call(d3.axisBottom(x));
 
    //yaxis.ticks(10);
 
