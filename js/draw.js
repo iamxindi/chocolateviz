@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 });
 
-var order = "Rank"
+var order = "Price"
 
 // Loads the CSV file
 function loadData() {
@@ -121,10 +121,12 @@ function visualizeChart(item) {
    //yaxis.ticks(10);
 
 
-  var rects = svg.selectAll(".bar")
+  var g = svg.selectAll(".bar")
    .data(item)
    .enter()
-   .append("rect")
+   .append("g")
+
+   g.append("rect")
    .attr("class", "bar")
    .attr("fill", "#5b717c")
    .attr("x", function(d) {
@@ -137,6 +139,13 @@ function visualizeChart(item) {
    .attr("height", function(d) {
      return height - y(d.winpercent);
    });
+
+   g.append("text")
+   .attr("dy", ".35em")
+   .text("1")
+   .attr("fill","black");
+
+//test
 
 //    svg.node().update = () => {
 //     const t = svg.transition()
