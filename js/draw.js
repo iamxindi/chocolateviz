@@ -11,7 +11,9 @@ var number_order = []
 function loadData() {
    d3.csv("data/candy-data.csv",function(d){
      data = d;
-     visualizeChart(data)
+     visualizeChart(data.sort(function(a, b){
+       return b[sortby]-a[sortby];
+      }))
      d3.selectAll(".radio").on("change",update);
      d3.selectAll(".button").on("click",function(){
        $('.button').removeClass("current");
@@ -101,11 +103,16 @@ function visualizeChart(item) {
    yaxis = svg.append("g")
      .call(d3.axisLeft(y))
 
+  var tooltip = d3.select("body")
+  .append("div")
+  .attr("class", "toolTip");
+
 
   var g = svg.selectAll(".bar")
    .data(item)
    .enter()
    .append("g")
+
 
    g.append("rect")
    .attr("class", "bar")
@@ -119,22 +126,31 @@ function visualizeChart(item) {
    })
    .attr("height", function(d) {
      return height - y(d.winpercent);
-   });
+   })
+   .attr("opacity", "0.7")
+   .on("mousemove",function(d,i){
+      d3.select(this).attr("opacity", "1");
+      rank = i+1;
+      tooltip
+        .style("left", d3.event.pageX - 50 + "px")
+        .style("top", d3.event.pageY - 300 + "px")
+        .style("position", "absolute")
+        .style("display", "inline-block")
+        .style("background","white")
+        .style("border","1px")
+        .attr("padding",10)
+        .html("rank: "+ rank + "</br>" + "name: "+d.competitorname + "</br>"+
+        "rank: " + d.winpercent + "</br>"+ "price: "+d.pricepercent +"</br>"+ "sugar: "+ d.sugarpercent)
 
-   //g.attr("class","centered")
+        //console.log(d3.event.pageX)
+    }).on("mouseout",function(d){
+      d3.select(this).attr("opacity", "0.7");
+        tooltip
+          .style("display", "none")
+      });
 
-   g.append("text")
-   .attr("dy", ".35em")
-   .attr("x", function(d) {
-     return x(d["competitorname"])+3;
-   })
-   .attr("y",function(d) {
-     return y(d.winpercent)+10;
-   })
-   .text(function(d,i) {
-     return number_order[i];
-   })
-   .attr("fill","white");
+
+
 
 
 }

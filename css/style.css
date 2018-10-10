@@ -30,7 +30,17 @@ h3 {
 .centered{
     text-align:center;
 }
-
+.toolTip {
+    position: absolute;
+    display: none;
+    min-width: 80px;
+    /* width:60px; */
+    height: auto;
+    background: none repeat scroll 0 0 #ffffff;
+    border: 1px solid #069ea8;
+    padding: 14px;
+    text-align: center;
+}
 .button {
     /* width: 60px; */
     padding: 5px 5px;
