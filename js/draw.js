@@ -3,30 +3,32 @@ $(document).ready(function () {
     loadData();
 });
 
-
+// set a global data of filtered data
 var filtered_data = []
+// default sort by rank
 var sortby = "winpercent"
-var number_order = []
 
 function loadData() {
    d3.csv("data/candy-data.csv",function(d){
      data = d;
+     // to start, visualize the whole data set and sort by default parameter
      visualizeChart(data.sort(function(a, b){
        return b[sortby]-a[sortby];
       }))
+    // when radio button change, update chart
      d3.selectAll(".radio").on("change",update);
+    // when user click button: change button style and update chart
      d3.selectAll(".button").on("click",function(){
        $('.button').removeClass("current");
        $(this).addClass('current');
        update();
    });
-
-   })
+  })
 }
 
 
 function update(filtered_data){
-
+  // check which radio button is checked and filter data
   $('input[type=radio]').each(function(){
       if (this.checked) {
         id = $(this)[0].id;
@@ -42,26 +44,21 @@ function update(filtered_data){
   })
 
 
+//check which button is clicked and get its id
  sortby = $(".current").attr('id');
  console.log(sortby)
 
+// sort data using sortby
   filtered_data.sort(function(a, b){
     return b[sortby]-a[sortby];
    });
 
-  for (i=0; i<filtered_data.length; i++){
-    number_order.push(i);
-  }
-  //number_order = filtered_data.length
-
-
+// clear chart
   $("#chart").empty()
+// update chart
   visualizeChart(filtered_data)
 
 }
-
-
-
 
 function visualizeChart(item) {
 
@@ -142,15 +139,9 @@ function visualizeChart(item) {
         .html("rank: "+ rank + "</br>" + "name: "+d.competitorname + "</br>"+
         "rank: " + d.winpercent + "</br>"+ "price: "+d.pricepercent +"</br>"+ "sugar: "+ d.sugarpercent)
 
-        //console.log(d3.event.pageX)
     }).on("mouseout",function(d){
       d3.select(this).attr("opacity", "0.7");
         tooltip
           .style("display", "none")
       });
-
-
-
-
-
 }
