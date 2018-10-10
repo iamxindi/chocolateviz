@@ -2,82 +2,52 @@
 $(document).ready(function () {
     loadData();
 
-
     //getSortValue();
 
 });
 
-var newdata = []
 
-var order = "Rank"
-
-// Loads the CSV file
 function loadData() {
    d3.csv("data/candy-data.csv",function(d){
+     d3.selectAll(".radio").on("change",update);
+     d3.selectAll(".button").on("click",update);
      data = d;
-     Filter();
-     //order = "Price";
-     Order(); //update order
-     console.log(order)
-     Sort(order);
-     // console.log(sort)
-     //Order(sort);
-
+     //visualizeChart(update());
    })
 }
 
-function Filter() {
-  //var newdata = [];
+
+var filtered_data = []
+var sortby = "winpercent"
+
+function update(){
+
   $('input[type=radio]').each(function(){
     $(this).change(function(){
-      //data = data;
+      console.log("1")
       if (this.checked) {
         id = $(this)[0].id;
-        item = data.filter(function (d) {
-          return d[id] == 1;
-      });
-      //console.log(item);
-      newdata = item;
-      console.log(newdata);
-      $("#chart").empty();
-      //visualizeChart(newdata);
-
-    };
+        filtered_data = data.filter(function (d) {
+                      return d[id] == 1;
+                          });
+    //console.log(filtered_data)
+     }
    })
   })
-}
 
-function Sort(order){
-
-
-  console.log(order);
-
-  switch (order) {
-    case "Rank":
-      data.sort((a, b) => b.winpercent - a.winpercent); break;
-    case "Price":
-      data.sort((a, b) => b.pricepercent - a.pricepercent); break;
-    case "Sugar Content":
-      data.sort((a, b) => b.sugarpercent - a.sugarpercent); break;
-  }
-  console.log(order);
-  //x.domain(data.map(d => d.name));
-  return order;
-}
-
-function Order(){
-  $('.button').each(function(){
+  $(".button").each(function(d){
     $(this).on('click', function(){
       $('.button').removeClass("current");
       $(this).addClass('current');
-      order = $(this).html();
-      //return order
-      //Sort(order);
-    })
+      sortby = $(this).attr('id');
+  })
+})
 
-    }
-  )
-return order
+  filtered_data.sort(function(a, b){
+    return a[sortby]-b[sortby];
+   });
+
+  return filtered_data
 }
 
 
