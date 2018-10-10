@@ -1,61 +1,67 @@
 
 $(document).ready(function () {
     loadData();
-
-    //getSortValue();
-
 });
-
-
-function loadData() {
-   d3.csv("data/candy-data.csv",function(d){
-     d3.selectAll(".radio").on("change",update);
-     d3.selectAll(".button").on("click",update);
-     data = d;
-     //visualizeChart(update());
-   })
-}
 
 
 var filtered_data = []
 var sortby = "winpercent"
+var number_order = []
 
-function update(){
-
-  $('input[type=radio]').each(function(){
-    $(this).change(function(){
-      console.log("1")
-      if (this.checked) {
-        id = $(this)[0].id;
-        filtered_data = data.filter(function (d) {
-                      return d[id] == 1;
-                          });
-    //console.log(filtered_data)
-     }
-   })
-  })
-
-  $(".button").each(function(d){
-    $(this).on('click', function(){
-      $('.button').removeClass("current");
-      $(this).addClass('current');
-      sortby = $(this).attr('id');
-  })
-})
-
-  filtered_data.sort(function(a, b){
-    return a[sortby]-b[sortby];
+function loadData() {
+   d3.csv("data/candy-data.csv",function(d){
+     data = d;
+     visualizeChart(data)
+     d3.selectAll(".radio").on("change",update);
+     d3.selectAll(".button").on("click",function(){
+       $('.button').removeClass("current");
+       $(this).addClass('current');
+       update();
    });
 
-  return filtered_data
+   })
+}
+
+
+function update(filtered_data){
+
+  $('input[type=radio]').each(function(){
+      if (this.checked) {
+        id = $(this)[0].id;
+        console.log(id);
+        if (id == "all"){
+          filtered_data = data;
+        }else{
+          filtered_data = data.filter(function (d) {
+                        return d[id] == 1;
+                            });
+        }
+     }
+  })
+
+
+ sortby = $(".current").attr('id');
+ console.log(sortby)
+
+  filtered_data.sort(function(a, b){
+    return b[sortby]-a[sortby];
+   });
+
+  for (i=0; i<filtered_data.length; i++){
+    number_order.push(i);
+  }
+  //number_order = filtered_data.length
+
+
+  $("#chart").empty()
+  visualizeChart(filtered_data)
+
 }
 
 
 
 
 function visualizeChart(item) {
-
-  //console.log(item);
 
   const margin = { top: 0, right: 100, bottom: 20, left: 100 };
   const width = 1000 - margin.left - margin.right;
@@ -80,7 +86,7 @@ function visualizeChart(item) {
      .attr("height", 600)
      //.attr("id", "container")
 
-   svg.append("g")
+   xaxis = svg.append("g")
      .attr("transform", "translate(0," + height + ")")
      .call(d3.axisBottom(x))
      .selectAll("text")
@@ -96,11 +102,8 @@ function visualizeChart(item) {
      .call(d3.axisLeft(y))
 
 
-   //yaxis.ticks(10);
-
-
   var g = svg.selectAll(".bar")
-   .data(item).order()
+   .data(item)
    .enter()
    .append("g")
 
@@ -108,7 +111,7 @@ function visualizeChart(item) {
    .attr("class", "bar")
    .attr("fill", "#5b717c")
    .attr("x", function(d) {
-     return x(d["competitorname"]);
+     return x(d.competitorname);
    })
    .attr("width", x.bandwidth())
    .attr("y", function(d) {
@@ -118,7 +121,7 @@ function visualizeChart(item) {
      return height - y(d.winpercent);
    });
 
-   g.attr("class","centered")
+   //g.attr("class","centered")
 
    g.append("text")
    .attr("dy", ".35em")
@@ -129,25 +132,9 @@ function visualizeChart(item) {
      return y(d.winpercent)+10;
    })
    .text(function(d,i) {
-     return i+1;
+     return number_order[i];
    })
    .attr("fill","white");
 
-   svg.node().update = () => {
-     const t = svg.transition()
-         .duration(750);
 
-     bar.data(data, d => d.competitorname)
-         .order()
-       .transition(t)
-         .delay((d, i) => i * 20)
-         .attr("x", d => x(d.competitorname));
-
-     gx.transition(t)
-         .call(xaxis)
-       .selectAll(".tick")
-         .delay((d, i) => i * 20);
-   };
-
-   return svg.node();
 }
